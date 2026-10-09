@@ -222,3 +222,5 @@ __marimo__/
 *.db
 scratch.py
 argparse_practice.py
+scratch*.py
+mymath.py
