@@ -25,3 +25,20 @@ def create_table():
                   )""")
     conn.commit()
     conn.close()
+
+
+def add_application(company, role, link = None, notes = None):
+    today = date.today().isoformat()
+    conn = get_connection()
+    cur = conn.execute(
+        "INSERT INTO applications "
+        "(company, role, link, status, applied_date, last_update,  notes) "
+        "VALUES(?,?,?,'applied',?,?,?)",
+        (company,role,link,today,today,notes),
+    )
+    conn.commit()
+    new_id = cur.lastrowid
+    conn.close()
+    return new_id
+
+
