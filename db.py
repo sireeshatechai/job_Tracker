@@ -42,3 +42,14 @@ def add_application(company, role, link = None, notes = None):
     return new_id
 
 
+def list_applications(status = None):
+    conn = get_connection()
+    if status:
+        cur = conn.execute("SELECT * FROM applications WHERE status = ? ORDER BY id", (status,),
+                            )
+    else:
+        cur = conn.execute("SELECT * FROM applications ORDER BY id")
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+    
