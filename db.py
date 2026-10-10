@@ -52,4 +52,19 @@ def list_applications(status = None):
     rows = cur.fetchall()
     conn.close()
     return rows
+
+
+def update_application(app_id, status):
+    if status not in STATUSES:
+        raise ValueError(f"Invalid status : {status}")
+    today = date.today().isoformat()
+    conn = get_connection()
+    cur = conn.execute("UPDATE applications SET status = ?, last_update = ? WHERE id = ?",(status,today,app_id),
+                       )
+    conn.commit()
+    found = cur.rowcount > 0
+    conn.close()
+    return found
+
+
     
