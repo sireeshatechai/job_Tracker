@@ -1,11 +1,12 @@
 # tracker.py - entry point: parses commands
 import argparse
 import sys
-
 import db
 
-
 def cmd_add(args):
+    if not args.company.strip() or not args.role.strip():
+        print("Error: company and role cannot be empty.")
+        sys.exit(1)
     new_id = db.add_application(args.company, args.role, args.link, args.notes)
     print(f"Added application #{new_id}: {args.role} at {args.company}")
 def print_table(rows):
