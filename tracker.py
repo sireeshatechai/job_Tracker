@@ -26,6 +26,17 @@ def cmd_list(args):
         return
     print_table(rows)
 
+def cmd_update(args):
+    try:
+        found = db.update_application(args.id, args.status)
+    except ValueError as err:
+        print(f"Error: {err}")
+        sys.exit(1)
+    if not found:
+        print(f"Error: no application with id {args.id}.")
+        sys.exit(1)
+    print(f"Application #{args.id} updated to '{args.status}'.")
+
 def build_parser():
     parser = argparse.ArgumentParser(description="Job application tracker")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -40,6 +51,11 @@ def build_parser():
     ls = sub.add_parser("list", help="list applications")
     ls.add_argument("--status", choices=db.STATUSES)
     ls.set_defaults(func=cmd_list)
+
+    up = sub.add_parser("update", help="change an application's status")
+    up.add_argument("id", type=int)
+    up.add_argument("--status", required=True, choices=db.STATUSES)
+    up.set_defaults(func=cmd_update)
 
     return parser
 
