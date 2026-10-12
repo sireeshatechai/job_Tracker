@@ -42,7 +42,7 @@ def cmd_update(args):
 def cmd_followups(args):
     rows = db.get_followups(args.days)
     if not rows:
-        print(f"No follow-ups needed ({args.days} + days without an update).")
+        print(f"No follow-ups needed ({args.days}+ days without an update).")
         return
     print_table(rows)
 
