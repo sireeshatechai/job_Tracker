@@ -38,6 +38,13 @@ def cmd_update(args):
         sys.exit(1)
     print(f"Application #{args.id} updated to '{args.status}'.")
 
+def cmd_followups(args):
+    rows = db.get_followups(args.days)
+    if not rows:
+        print(f"No follow-ups needed ({args.days} + days without an update).")
+        return
+    print_table(rows)
+
 def build_parser():
     parser = argparse.ArgumentParser(description="Job application tracker")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -57,6 +64,10 @@ def build_parser():
     up.add_argument("id", type=int)
     up.add_argument("--status", required=True, choices=db.STATUSES)
     up.set_defaults(func=cmd_update)
+
+    fu = sub.add_parser("followups", help="applications needing a follow-up")
+    fu.add_argument("--days", type=int, default=7)
+    fu.set_defaults(func=cmd_followups)
 
     return parser
 

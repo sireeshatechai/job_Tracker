@@ -67,4 +67,13 @@ def update_application(app_id, status):
     return found
 
 
-    
+def get_followups(days = 7):
+    conn = get_connection()
+    cur = conn.execute("SELECT * FROM applications"
+                       " WHERE status = 'applied' AND last_update <= date('now','localtime', ?)"
+                       " ORDER BY last_update",
+                       (f"-{days} days",),
+                       )
+    rows = cur.fetchall()
+    conn.close()
+    return rows
