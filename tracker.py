@@ -1,5 +1,6 @@
 # tracker.py - entry point: parses commands
 import argparse
+import csv
 import sys
 import db
 
@@ -55,6 +56,18 @@ def cmd_stats(args):
     print("-" * 14)
     print(f"{'total':<10} {total}")
 
+def cmd_export(args):
+    rows = db.list_applications()
+    if not rows:
+        print("Nothing to export yet.")
+        return
+    with open(args.output, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(rows[0].keys())
+        for row in rows:
+            writer.writerow(row)
+    print(f"Exported {len(rows)} applications to {args.output}")
+
 def build_parser():
     parser = argparse.ArgumentParser(description="Job application tracker")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -81,7 +94,10 @@ def build_parser():
 
     st = sub.add_parser("stats", help="counts by status")
     st.set_defaults(func=cmd_stats)
-
+    
+    ex = sub.add_parser("export", help="write applications to a CSV file")
+    ex.add_argument("--output", default="applications.csv")
+    ex.set_defaults(func=cmd_export)
     return parser
 
 
