@@ -45,6 +45,16 @@ def cmd_followups(args):
         return
     print_table(rows)
 
+def cmd_stats(args):
+    counts = db.get_stats()
+    total = 0
+    for status in db.STATUSES:
+        number = counts.get(status, 0)
+        total += number
+        print(f"{status:<10} {number}")
+    print("-" * 14)
+    print(f"{'total':<10} {total}")
+
 def build_parser():
     parser = argparse.ArgumentParser(description="Job application tracker")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -68,6 +78,9 @@ def build_parser():
     fu = sub.add_parser("followups", help="applications needing a follow-up")
     fu.add_argument("--days", type=int, default=7)
     fu.set_defaults(func=cmd_followups)
+
+    st = sub.add_parser("stats", help="counts by status")
+    st.set_defaults(func=cmd_stats)
 
     return parser
 

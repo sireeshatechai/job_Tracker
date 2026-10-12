@@ -77,3 +77,11 @@ def get_followups(days = 7):
     rows = cur.fetchall()
     conn.close()
     return rows
+
+def get_stats():
+    conn = get_connection()
+    rows = conn.execute(
+        "SELECT status, COUNT(*) AS total FROM applications GROUP BY status"
+    ).fetchall()
+    conn.close()
+    return {row["status"]: row["total"] for row in rows}
