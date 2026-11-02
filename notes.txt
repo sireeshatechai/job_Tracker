@@ -1,0 +1,29 @@
+Liked: a short pitch under the title, a screenshot at the top, numbered setup steps
+Liked: usage examples with real output
+Don't copy: very long README, many badges, sections I don't need
+My plan: title + pitch, features, screenshot, setup, usage, structure
+
+1. Title + one-line pitch
+2. Features
+3. Screenshot
+4. Setup
+5. Usage examples
+6. Project structure
+7. What I learned
+
+1. Title + pitch: "Job Tracker, a command-line tool that tracks job applications in SQLite."
+2. Features: add, list and update applications; follow-ups; stats; CSV export; optional email digest.
+3. Screenshot: output of `python tracker.py list`.
+4. Setup: clone, Python 3.9+, pip install -r requirements.txt, optional .env for the digest.
+5. Usage: one example command for each of the 8 commands.
+6. Structure: tracker.py (commands), db.py (database), notifier.py (email).
+7. What I learned: argparse, sqlite3, Git, debugging.
+
+Part 3: The stranger test (5 min)
+
+Someone who has never seen your project must be able to run it by following only your README. Check that your plan covers these:
+
+The Python version needed (3.9 or higher).
+The exact install command: pip install -r requirements.txt.
+The email digest is optional, with the .env steps explained.
+Example commands people can copy.
