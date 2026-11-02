@@ -225,4 +225,4 @@ argparse_practice.py
 scratch*.py
 mymath.py
 applications.csv
-test.csv
+*.csv

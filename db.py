@@ -12,7 +12,8 @@ def get_connection():
 
 def create_table():
     conn = get_connection()
-    conn.execute("""
+    try:
+        conn.execute("""
                   CREATE TABLE IF NOT EXISTS applications(
                   id INTEGER PRIMARY KEY AUTOINCREMENT,
                   company TEXT NOT NULL,
@@ -23,23 +24,34 @@ def create_table():
                   last_update TEXT,
                   notes TEXT
                   )""")
-    conn.commit()
-    conn.close()
+        conn.commit()
+    except sqlite3.Error as e:
+        conn.rollback()
+        print(f"Database error while creating table: {e}")
+        raise
+    finally:
+        conn.close()
 
 
 def add_application(company, role, link = None, notes = None):
     today = date.today().isoformat()
     conn = get_connection()
-    cur = conn.execute(
+    try:
+        cur = conn.execute(
         "INSERT INTO applications "
         "(company, role, link, status, applied_date, last_update,  notes) "
         "VALUES(?,?,?,'applied',?,?,?)",
         (company,role,link,today,today,notes),
-    )
-    conn.commit()
-    new_id = cur.lastrowid
-    conn.close()
-    return new_id
+        )
+        conn.commit()
+        return cur.lastrowid
+    except sqlite3.Error as e:
+        conn.rollback()
+        print(f"Database error while adding application: {e}")
+        raise
+    finally:
+        conn.close()
+    
 
 
 def list_applications(status = None):
