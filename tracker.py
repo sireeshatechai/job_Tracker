@@ -68,16 +68,30 @@ def cmd_export(args):
             writer.writerow(row)
     print(f"Exported {len(rows)} applications to {args.output}")
 
+def cmd_digest(args):
+    import notifier
+    try:
+        notifier.send_digest(args.days)
+    except Exception as err:
+        print(f"Error: could not send digest: {err}")
+        sys.exit(1)
+    print("Digest sent.")
+
 def build_parser():
     parser = argparse.ArgumentParser(description="Job application tracker")
     sub = parser.add_subparsers(dest="command", required=True)
 
     add = sub.add_parser("add", help="add a new application")
+    
     add.add_argument("--company", required=True)
     add.add_argument("--role", required=True)
     add.add_argument("--link")
     add.add_argument("--notes")
     add.set_defaults(func=cmd_add)
+
+    dg = sub.add_parser("digest", help="email the daily summary")
+    dg.add_argument("--days", type=int, default=7)
+    dg.set_defaults(func=cmd_digest)
 
     ls = sub.add_parser("list", help="list applications")
     ls.add_argument("--status", choices=db.STATUSES)
